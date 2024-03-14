@@ -12,13 +12,29 @@ type State = {
 const useCountStore = create<State>((set) => ({
     count: 0,
     increaseCount: () => set((state) => ({ count: state.count + 1 })),
-    resetCount: () => set({ count: 0 }),
     decreaseCount: () => set((state) => ({ count: state.count - 1 })),
+    resetCount: () => set({ count: 0 }),
 }));
 
-function App() {
-    const { count, increaseCount, decreaseCount, resetCount } = useCountStore();
+function CounterDisplay() {
+    const count = useCountStore((state) => state.count);
+    return <p>{count}</p>;
+}
 
+function Counter() {
+    const increase = useCountStore((state) => state.increaseCount);
+    const decrease = useCountStore((state) => state.decreaseCount);
+    const reset = useCountStore((state) => state.resetCount);
+    return (
+        <div className="card">
+            <button onClick={increase}>Count Up</button>
+            <button onClick={decrease}>Count down</button>
+            <button onClick={reset}>Reset</button>
+        </div>
+    );
+}
+
+function App() {
     return (
         <>
             <div>
@@ -33,13 +49,9 @@ function App() {
 
             <h1>Vite + React</h1>
 
-            <p>{count}</p>
+            <CounterDisplay />
 
-            <div className="card">
-                <button onClick={increaseCount}>Count Up</button>
-                <button onClick={decreaseCount}>Count down</button>
-                <button onClick={resetCount}>Reset</button>
-            </div>
+            <Counter />
         </>
     );
 }
