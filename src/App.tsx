@@ -1,7 +1,7 @@
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
-import { create } from "zustand";
+import { createStore } from "zustand";
 
 type State = {
     count: number;
@@ -9,7 +9,7 @@ type State = {
     resetCount: () => void;
     decreaseCount: () => void;
 };
-const useCountStore = create<State>((set) => ({
+const useCountStore = createStore<State>((set) => ({
     count: 0,
     increaseCount: () => set((state) => ({ count: state.count + 1 })),
     decreaseCount: () => set((state) => ({ count: state.count - 1 })),
@@ -17,14 +17,19 @@ const useCountStore = create<State>((set) => ({
 }));
 
 function CounterDisplay() {
-    const count = useCountStore((state) => state.count);
+    const count = useCountStore.getState().count;
     return <p>{count}</p>;
 }
 
 function Counter() {
-    const increase = useCountStore((state) => state.increaseCount);
-    const decrease = useCountStore((state) => state.decreaseCount);
-    const reset = useCountStore((state) => state.resetCount);
+    const increase = useCountStore.getState().increaseCount;
+    const decrease = useCountStore.getState().decreaseCount;
+    const reset = useCountStore.getState().resetCount;
+
+    useCountStore.subscribe(({ count }) => {
+        console.log(count);
+    });
+
     return (
         <div className="card">
             <button onClick={increase}>Count Up</button>
